@@ -1,4 +1,12 @@
 <template>
+  <ExpTextarea
+    v-model="expTextarea.visible"
+    :visible="expTextarea.visible"
+    :label="expTextarea.title"
+    :content="expTextarea.content"
+    @update="saveExpTextarea"
+    @close="closeExpTextarea"
+  />
   <v-card style="background-color: inherit;">
     <v-row>
       <v-col cols="12" v-if="optionInbound">
@@ -60,34 +68,59 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.domain != undefined">
-        <v-text-field
-        :label="$t('rule.domain') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain"></v-text-field>
+        <v-textarea :label="$t('rule.domain')"
+          hide-details
+          v-model="domain"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.domain'), 'domain')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.domain_suffix != undefined">
-        <v-text-field
-        :label="$t('rule.domainSufix') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_suffix"></v-text-field>
+        <v-textarea :label="$t('rule.domainSufix')"
+          hide-details
+          v-model="domain_suffix"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.domainSufix'), 'domain_suffix')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.domain_keyword != undefined">
-        <v-text-field
-        :label="$t('rule.domainKw') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_keyword"></v-text-field>
+        <v-textarea :label="$t('rule.domainKw')"
+          hide-details
+          v-model="domain_keyword"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.domainKw'), 'domain_keyword')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.domain_regex != undefined">
-        <v-text-field
-        :label="$t('rule.domainRgx') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="domain_regex"></v-text-field>
+        <v-textarea :label="$t('rule.domainRgx')"
+          hide-details
+          v-model="domain_regex"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.domainRgx'), 'domain_regex')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.ip_cidr != undefined">
-        <v-text-field
-        :label="$t('rule.ip') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="ip_cidr"></v-text-field>
+        <v-textarea :label="$t('rule.ip')"
+          hide-details
+          v-model="ip_cidr"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.ip'), 'ip_cidr')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.ip_is_private != undefined">
         <v-switch v-model="rule.ip_is_private" color="primary" :label="$t('rule.privateIp')" hide-details></v-switch>
@@ -103,16 +136,26 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.port != undefined">
-        <v-text-field
-        :label="$t('rule.port') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="port"></v-text-field>
+        <v-textarea :label="$t('rule.port')"
+          hide-details
+          v-model="port"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.port'), 'port')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.port_range != undefined">
-        <v-text-field
-        :label="$t('rule.portRange') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="port_range"></v-text-field>
+        <v-textarea :label="$t('rule.portRange')"
+          hide-details
+          v-model="port_range"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.portRange'), 'port_range')"
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionSrcIP">
@@ -125,10 +168,15 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.source_ip_cidr != undefined">
-        <v-text-field
-        :label="$t('rule.srcCidr') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_ip_cidr"></v-text-field>
+        <v-textarea :label="$t('rule.srcCidr')"
+          hide-details
+          v-model="source_ip_cidr"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.srcCidr'), 'source_ip_cidr')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.source_ip_is_private != undefined">
         <v-switch v-model="rule.source_ip_is_private" color="primary" :label="$t('rule.srcPrivateIp')" hide-details></v-switch>
@@ -144,16 +192,26 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.source_port != undefined">
-        <v-text-field
-        :label="$t('rule.srcPort') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_port"></v-text-field>
+        <v-textarea :label="$t('rule.srcPort')"
+          hide-details
+          v-model="source_port"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.srcPort'), 'source_port')"
+        />
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.source_port_range != undefined">
-        <v-text-field
-        :label="$t('rule.srcPortRange') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="source_port_range"></v-text-field>
+        <v-textarea :label="$t('rule.srcPortRange')"
+          hide-details
+          v-model="source_port_range"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.srcPortRange'), 'source_port_range')"
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionPreferredBy">
@@ -178,10 +236,15 @@
         </v-select>
       </v-col>
       <v-col cols="12" sm="6" v-if="rule.interface_address != undefined || rule.network_interface_address != undefined || rule.default_interface_address != undefined">
-        <v-text-field
-        :label="$t('rule.interfaceAddr') + ' ' + $t('commaSeparated')"
-        hide-details
-        v-model="interface_addr"></v-text-field>
+        <v-textarea :label="$t('rule.interfaceAddr')"
+          hide-details
+          v-model="interface_addr"
+          rows="5"
+          no-resize
+          density="compact"
+          append-icon="mdi-arrow-expand"
+          @click:append="openExpTextarea($t('rule.interfaceAddr'), 'interface_address')"
+        />
       </v-col>
     </v-row>
     <v-row v-if="optionRuleSet">
@@ -251,7 +314,9 @@
 </template>
 
 <script lang="ts">
+import ExpTextarea from '@/components/ExpTextarea.vue'
 export default {
+  components: { ExpTextarea },
   props: ['rule', 'clients', 'inTags', 'outTags', 'rsTags', 'deleteable'],
   data() {
     return {
@@ -278,6 +343,12 @@ export default {
         { title: 'RDP', value: 'rdp' },
         { title: 'NTP', value: 'ntp' },
       ],
+      expTextarea: {
+        visible: false,
+        title: '',
+        content: '',
+        object: '',
+      }
     }
   },
   methods: {
@@ -300,6 +371,21 @@ export default {
     updateInterfaceOption(option:string) {
       this.interfaceKeys.forEach(k => delete this.$props.rule[k])
       this.$props.rule[option] = []
+    },
+    openExpTextarea(title:string, object:string) {
+      this.expTextarea.visible = !this.expTextarea.visible
+      this.expTextarea.title = title
+      this.expTextarea.content = this.$props.rule[object]?.join('\n') ?? ''
+      this.expTextarea.object = object
+    },
+    saveExpTextarea(results:string[]) {
+      this.$props.rule[this.expTextarea.object] = results
+      this.closeExpTextarea()
+    },
+    closeExpTextarea() {
+      this.expTextarea.visible = false
+      this.expTextarea.title = ''
+      this.expTextarea.object = ''
     },
   },
   computed: {
@@ -395,61 +481,63 @@ export default {
       set(v:boolean) { this.$props.rule.network = v ? [] : undefined }
     },
     domain: {
-      get() { return this.$props.rule.domain?.join(',') },
-      set(v:string) { this.$props.rule.domain = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_suffix: {
-      get() { return this.$props.rule.domain_suffix?.join(',') },
-      set(v:string) { this.$props.rule.domain_suffix = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_suffix?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_suffix = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_keyword: {
-      get() { return this.$props.rule.domain_keyword?.join(',') },
-      set(v:string) { this.$props.rule.domain_keyword = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_keyword?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_keyword = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     domain_regex: {
-      get() { return this.$props.rule.domain_regex?.join(',') },
-      set(v:string) { this.$props.rule.domain_regex = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.domain_regex?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.domain_regex = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     ip_cidr: {
-      get() { return this.$props.rule.ip_cidr?.join(',') },
-      set(v:string) { this.$props.rule.ip_cidr = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.ip_cidr?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.ip_cidr = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     port: {
-      get() { return this.$props.rule.port?.join(',') },
+      get() { return this.$props.rule.port?.join('\n') ?? '' },
       set(v:string) {
-        if(!v.endsWith(',')) {
-          this.$props.rule.port = v.length > 0 ? v.split(',').map(str => parseInt(str, 10)) : []
+        const lines = v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0)
+        if (!v.endsWith('\n')) {
+          this.$props.rule.port = lines.length > 0 ? lines.map((str:string) => parseInt(str, 10)).filter((n:number) => !isNaN(n)) : []
         }
       }
     },
     port_range: {
-      get() { return this.$props.rule.port_range?.join(',') },
-      set(v:string) { this.$props.rule.port_range = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.port_range?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.port_range = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     source_ip_cidr: {
-      get() { return this.$props.rule.source_ip_cidr?.join(',') },
-      set(v:string) { this.$props.rule.source_ip_cidr = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.source_ip_cidr?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.source_ip_cidr = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     source_port: {
-      get() { return this.$props.rule.source_port?.join(',') },
+      get() { return this.$props.rule.source_port?.join('\n') ?? '' },
       set(v:string) {
-        if(!v.endsWith(',')) {
-          this.$props.rule.source_port = v.length > 0 ? v.split(',').map(str => parseInt(str, 10)) : []
+        const lines = v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0)
+        if (!v.endsWith('\n')) {
+          this.$props.rule.source_port = lines.length > 0 ? lines.map((str:string) => parseInt(str, 10)).filter((n:number) => !isNaN(n)) : []
         }
       }
     },
     source_port_range: {
-      get() { return this.$props.rule.source_port_range?.join(',') },
-      set(v:string) { this.$props.rule.source_port_range = v.length>0 ? v.split(',') : [] }
+      get() { return this.$props.rule.source_port_range?.join('\n') ?? '' },
+      set(v:string) { this.$props.rule.source_port_range = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : [] }
     },
     interface_addr: {
       get() {
         const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
-        return k ? this.$props.rule[k]?.join(',') : ''
+        return k ? this.$props.rule[k]?.join('\n') ?? '' : ''
       },
       set(v:string) {
         const k = this.interfaceKeys.find(k => this.$props.rule[k] != undefined)
-        if (k) this.$props.rule[k] = v.length>0 ? v.split(',') : []
+        if (k) this.$props.rule[k] = v.length > 0 ? v.split('\n').map((s:string) => s.trim()).filter((s:string) => s.length > 0) : []
       }
     },
   },

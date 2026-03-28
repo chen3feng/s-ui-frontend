@@ -10,7 +10,6 @@
     <v-tab value="t2">{{ $t('setting.sub') }}</v-tab>
     <v-tab value="t3">{{ $t('setting.jsonSub') }}</v-tab>
     <v-tab value="t4">{{ $t('setting.clashSub') }}</v-tab>
-    <v-tab value="t5">Language</v-tab>
   </v-tabs>
   <v-card-text>
     <v-row align="center" justify="center" style="margin-bottom: 10px;">
@@ -136,35 +135,19 @@
       <v-window-item value="t4">
         <SubClashExtVue :settings="settings" />
       </v-window-item>
-
-      <v-window-item value="t5">
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-select
-              hide-details
-              label="Language"
-              :items="languages"
-              v-model="$i18n.locale"
-              @update:modelValue="changeLocale">
-            </v-select>
-          </v-col>
-        </v-row>
-      </v-window-item>
     </v-window>
   </v-card-text>
 </v-card>
 </template>
 
 <script lang="ts" setup>
-import { useLocale } from 'vuetify'
-import { i18n, languages } from '@/locales'
+import { i18n } from '@/locales'
 import { Ref, computed, inject, onMounted, ref } from 'vue'
 import HttpUtils from '@/plugins/httputil'
 import { FindDiff } from '@/plugins/utils'
 import SubJsonExtVue from '@/components/SubJsonExt.vue'
 import SubClashExtVue from '@/components/SubClashExt.vue'
 import { push } from 'notivue'
-const locale = useLocale()
 const tab = ref("t1")
 const loading:Ref = inject('loading')?? ref(false)
 const oldSettings = ref({})
@@ -199,11 +182,6 @@ onMounted(async () => {
   await loadData()
   loading.value = false
 })
-
-const changeLocale = (l: any) => {
-  locale.current.value = l ?? 'en'
-  localStorage.setItem('locale', locale.current.value)
-}
 
 const loadData = async () => {
   loading.value = true

@@ -66,6 +66,11 @@
       </v-col>
     </v-row>
     <v-row>
+      <v-col cols="12" sm="8">
+        <v-text-field v-model="data.ext.dns" :label="$t('dns.title') + ' ' + $t('commaSeparated')" hide-details></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" sm="6" md="4">
         <v-switch v-model="data.system" color="primary" :label="$t('types.wg.sysIf')" hide-details></v-switch>
       </v-col>

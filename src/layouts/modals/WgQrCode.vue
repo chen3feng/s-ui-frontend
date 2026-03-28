@@ -50,7 +50,7 @@ export default {
       let txt = `[Interface]\n`
       txt += `PrivateKey = ${keys.private_key}\n`
       txt += `Address = ${peerData.allowed_ips.join(',')}\n`
-      txt += `DNS = 1.1.1.1, 9.9.9.9\n`
+      txt += `DNS = ${this.wgData.ext?.dns?.length>0 ? this.wgData.ext.dns : '1.1.1.1, 9.9.9.9'}\n`
       if (this.wgData.mtu) {
           txt += `MTU = ${this.wgData.mtu}\n`
       }

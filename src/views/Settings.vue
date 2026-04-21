@@ -136,6 +136,71 @@
         <SubClashExtVue :settings="settings" />
       </v-window-item>
     </v-window>
+
+    <v-divider class="my-4"></v-divider>
+
+    <!-- Upgrade Section -->
+    <v-row align="center">
+      <v-col cols="auto">
+        <span class="text-subtitle-1 font-weight-medium">{{ $t('upgrade.title') }}</span>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn
+          variant="outlined"
+          color="info"
+          size="small"
+          @click="checkUpdate"
+          :loading="upgradeChecking"
+        >
+          {{ $t('upgrade.checkUpdate') }}
+        </v-btn>
+      </v-col>
+      <v-col cols="auto" v-if="updateInfo && updateInfo.hasUpdate">
+        <v-btn
+          color="success"
+          size="small"
+          @click="confirmUpgrade = true"
+          :loading="upgrading"
+        >
+          <v-icon start>mdi-download</v-icon>
+          {{ $t('upgrade.doUpgrade') }} ({{ updateInfo.latestVersion }})
+        </v-btn>
+      </v-col>
+      <v-col cols="auto" v-if="updateInfo && !updateInfo.hasUpdate">
+        <v-chip color="success" variant="flat" size="small">
+          <v-icon start>mdi-check-circle</v-icon>
+          {{ $t('upgrade.upToDate') }}
+        </v-chip>
+      </v-col>
+    </v-row>
+    <v-row v-if="updateInfo" class="mt-1">
+      <v-col cols="12">
+        <v-chip size="small" class="mr-2">{{ $t('upgrade.current') }}: v{{ updateInfo.currentVersion }}</v-chip>
+        <v-chip size="small" v-if="updateInfo.hasUpdate" color="warning">{{ $t('upgrade.latest') }}: v{{ updateInfo.latestVersion }}</v-chip>
+      </v-col>
+      <v-col cols="12" v-if="updateInfo.hasUpdate && updateInfo.releaseNotes">
+        <v-expansion-panels variant="accordion">
+          <v-expansion-panel :title="$t('upgrade.releaseNotes')">
+            <v-expansion-panel-text>
+              <pre style="white-space: pre-wrap; font-size: 0.85em;">{{ updateInfo.releaseNotes }}</pre>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+    </v-row>
+
+    <!-- Upgrade Confirmation Dialog -->
+    <v-dialog v-model="confirmUpgrade" max-width="450">
+      <v-card>
+        <v-card-title>{{ $t('upgrade.confirmTitle') }}</v-card-title>
+        <v-card-text>{{ $t('upgrade.confirmMsg') }}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="confirmUpgrade = false">{{ $t('no') }}</v-btn>
+          <v-btn color="success" @click="doUpgrade">{{ $t('yes') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card-text>
 </v-card>
 </template>
@@ -151,6 +216,12 @@ import { push } from 'notivue'
 const tab = ref("t1")
 const loading:Ref = inject('loading')?? ref(false)
 const oldSettings = ref({})
+
+// Upgrade state
+const upgradeChecking = ref(false)
+const upgrading = ref(false)
+const updateInfo = ref<any>(null)
+const confirmUpgrade = ref(false)
 
 const settings = ref({
 	webListen: "",
@@ -281,4 +352,35 @@ const subUpdates = computed({
 const stateChange = computed(() => {
   return !FindDiff.deepCompare(settings.value,oldSettings.value)
 })
+
+const checkUpdate = async () => {
+  upgradeChecking.value = true
+  const msg = await HttpUtils.get('api/checkUpdate')
+  upgradeChecking.value = false
+  if (msg.success) {
+    updateInfo.value = msg.obj
+    if (!msg.obj.hasUpdate) {
+      push.success({
+        message: i18n.global.t('upgrade.upToDate'),
+      })
+    }
+  }
+}
+
+const doUpgrade = async () => {
+  confirmUpgrade.value = false
+  upgrading.value = true
+  const msg = await HttpUtils.post('api/doUpgrade', {})
+  if (msg.success) {
+    push.success({
+      title: i18n.global.t('success'),
+      message: i18n.global.t('upgrade.success'),
+      duration: 10000,
+    })
+    // Wait for the panel to restart, then reload the page
+    await sleep(5000)
+    window.location.reload()
+  }
+  upgrading.value = false
+}
 </script>

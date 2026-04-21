@@ -632,4 +632,16 @@ export default {
     s: "秒",
     ms: "毫秒",
   },
+  upgrade: {
+    title: "系統升級",
+    checkUpdate: "檢查更新",
+    doUpgrade: "升級到",
+    upToDate: "已是最新版本",
+    current: "目前版本",
+    latest: "最新版本",
+    releaseNotes: "更新日誌",
+    confirmTitle: "確認升級",
+    confirmMsg: "將下載並安裝最新版本，然後重啟面板。確定要繼續嗎？",
+    success: "升級成功！面板正在重啟...",
+  },
 }

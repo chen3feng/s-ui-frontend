@@ -634,4 +634,16 @@ export default {
     s: "s",
     ms: "ms",
   },
+  upgrade: {
+    title: "System Upgrade",
+    checkUpdate: "Check for Updates",
+    doUpgrade: "Upgrade to",
+    upToDate: "Already up to date",
+    current: "Current",
+    latest: "Latest",
+    releaseNotes: "Release Notes",
+    confirmTitle: "Confirm Upgrade",
+    confirmMsg: "This will download and install the latest version, then restart the panel. Are you sure?",
+    success: "Upgrade successful! The panel is restarting...",
+  },
 }

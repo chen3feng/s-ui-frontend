@@ -632,4 +632,16 @@ export default {
     s: "s",
     ms: "ms",
   },
+  upgrade: {
+    title: "Nâng cấp hệ thống",
+    checkUpdate: "Kiểm tra cập nhật",
+    doUpgrade: "Nâng cấp lên",
+    upToDate: "Đã là phiên bản mới nhất",
+    current: "Hiện tại",
+    latest: "Mới nhất",
+    releaseNotes: "Ghi chú phát hành",
+    confirmTitle: "Xác nhận nâng cấp",
+    confirmMsg: "Phiên bản mới nhất sẽ được tải xuống và cài đặt, sau đó bảng điều khiển sẽ khởi động lại. Bạn có chắc không?",
+    success: "Nâng cấp thành công! Bảng điều khiển đang khởi động lại...",
+  },
 }

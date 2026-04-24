@@ -18,6 +18,7 @@ export interface Client {
   up: number
   down: number
   desc: string
+  subUUID?: string
   group: string
   delayStart?: boolean
   autoReset?: boolean
@@ -38,6 +39,7 @@ const defaultClient: Client = {
   up: 0,
   down: 0,
   desc: "",
+  subUUID: "",
   group: "",
   delayStart: false,
   autoReset: false,
